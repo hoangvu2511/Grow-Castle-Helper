@@ -13,12 +13,11 @@ class AppState:
         self.openAppUseCase = OpenAppUseCase()
 
     def performStart(self):
-        self.maxDimondUseCase.startWithRetry(retry=3)
-        # if not self.openAppUseCase.startWithRetry(retry=3):
-        #     return
-        # Utils.wait(2)
-        # while True:
-        #     if not self.battleUseCase.start_use_case():
-        #         Utils.wait(0.5)
-        #         continue
-        #     self.maxDimondUseCase.start_use_case()
+        if not self.openAppUseCase.startWithRetry(retry=3):
+            return
+        Utils.wait(2)
+        while True:
+            if not self.battleUseCase.start_use_case():
+                Utils.wait(0.5)
+                continue
+            self.maxDimondUseCase.start_use_case()
