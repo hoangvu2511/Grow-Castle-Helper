@@ -1,8 +1,10 @@
+import os
+
 import pyautogui
 from pyscreeze import Box
+
 from utils.Utils import Utils
-import traceback
-import os
+
 
 class ClickObject:
 
@@ -11,7 +13,7 @@ class ClickObject:
         """init ClickObject
         Args:
             path (str): path to the image need to be clicked
-            kwargs (dict): other settings
+            kwargs: other settings
                 confidence (float): confidence of the image, default: 0.8
                 oneTimeClick (bool): if True, the object will be clicked only once
                 logErrorOnClick (bool): if True, the error will be logged when the object is not found
@@ -22,6 +24,7 @@ class ClickObject:
                                 default: False
                 icon_name (str): name of the object for logging
                                 default: path
+                numberOfClick (int): number of click, default: 1
         """
         self._isValidatePath(path)
         self._path = path
@@ -53,13 +56,15 @@ class ClickObject:
             return True
         try:
             action = self.isExist(self._otherSettings.get('logErrorOnClick', True))
-            if action:
-                if self._otherSettings.get('logOnFound'):
-                    Utils().log(f'Found object at place {action}')
+            if not action: return False
+            if self._otherSettings.get('logOnFound'):
+                Utils().log(f'Found object at place {action}')
+            numberOfClick = self._otherSettings.get('numberOfClick', 1)
+            for _ in range(numberOfClick):
                 pyautogui.click(action)
-                if oneTimeClick:
-                    self._isClicked = True
-                return True
+            if oneTimeClick:
+                self._isClicked = True
+            return True
         except:
             Utils().log(f'Failed to click {self}')
             pass

@@ -1,4 +1,8 @@
+import numbers
 from abc import ABC, abstractmethod
+
+from ClickObject import ClickObject
+from utils.ImageConstants import ImageConstants
 from utils.SingleTonImplement import SingleTonImplement
 from utils.Utils import Utils
 
@@ -10,6 +14,9 @@ class BaseUseCase(SingleTonImplement, ABC):
 
     def _usecaseLog(self, message):
         Utils().log(f'{self.__class__.__name__}: {message}')
+
+    def _wait(self, delay: numbers.Number):
+        Utils.wait(delay)
 
     def startWithRetry(self, **kwargs) -> bool:
         """startWithRetry
@@ -39,3 +46,8 @@ class BaseUseCase(SingleTonImplement, ABC):
 
     def reset(self):
         pass
+
+    def clearAllOpenedPopUp(self):
+        icon_close = ClickObject(ImageConstants().ICON_CLOSE, confidence=0.7)
+        while icon_close.click():
+            Utils().wait(2)
