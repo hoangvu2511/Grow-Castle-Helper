@@ -50,4 +50,4 @@ class BaseUseCase(SingleTonImplement, ABC):
     def clearAllOpenedPopUp(self):
         icon_close = ClickObject(ImageConstants().ICON_CLOSE, confidence=0.7)
         while icon_close.click():
-            Utils().wait(2)
+            Utils().wait(1)

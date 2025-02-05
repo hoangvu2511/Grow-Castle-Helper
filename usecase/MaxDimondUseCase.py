@@ -15,7 +15,6 @@ class MaxDimondUseCase(BaseUseCase):
         self._maxDimondLevelUp = ClickObject(imageConstant.MAX_DIMOND_LEVEL_UP, numberOfClick=15,
                                              icon_name="level up button")
         self._tower = ClickObject(imageConstant.TOWER_CLICKABLE)
-        self._ic_close = ClickObject(imageConstant.ICON_CLOSE, confidence=0.7)
 
     def start_use_case(self, **kwargs) -> bool:
         Utils.wait(3)
@@ -27,6 +26,5 @@ class MaxDimondUseCase(BaseUseCase):
             return False
         Utils.wait(1)
         self._maxDimondLevelUp.click()
-        self._ic_close.click()
-        self._ic_close.click()
+        self.clearAllOpenedPopUp()
         return True
