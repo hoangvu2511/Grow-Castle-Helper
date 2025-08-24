@@ -9,25 +9,21 @@ class AppState:
 
     def __init__(self, **kwargs):
         self._isRunning = False
-        self.battleUseCase = BattleUseCase(enableClickTree=kwargs.get('enableClickTree', True))
-        self.maxDimondUseCase = MaxDimondUseCase()
+        self.battleUseCase = BattleUseCase(**kwargs)
+        self.maxDimondUseCase = MaxDimondUseCase(**kwargs)
         self.openAppUseCase = OpenAppUseCase()
         self.battleDungeon = BattleDungeon(**kwargs)
 
-    def performStart(self):
-        if not self.checkApp():
-            return
+    def performStart(self, stop_event=None):
         Utils.wait(2)
-        while True:
-            if not self.battleUseCase.start_use_case():
+        while stop_event == None or (stop_event != None and stop_event.is_set() is False):
+            if not self.battleUseCase.start_use_case(stop_event=stop_event):
                 Utils.wait(0.5)
                 continue
             self.maxDimondUseCase.start_use_case()
 
-    def performDungeon(self):
-        if not self.checkApp():
-            return
-        while True:
+    def performDungeon(self, stop_event=None):
+        while stop_event == None or (stop_event != None and stop_event.is_set() is False):
             self.battleDungeon.start_use_case()
             Utils.wait(2)
 

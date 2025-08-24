@@ -1,11 +1,12 @@
-from utils.SingleTonImplement import SingleTonImplement
+from utils.SingletonImplement import SingletonImplement
 
 
-class ImageConstants(SingleTonImplement):
+class ImageConstants(SingletonImplement):
     def __init__(self):
         self._BASE_PATH = 'images/'
         self.START_IMAGE = self._BASE_PATH + 'image.png'
         self.TREE_IMAGE = self._BASE_PATH + 'tree.png'
+        self.GOLD_IMAGE = self._BASE_PATH + 'gold.png'
         self.MIMIC_IMAGE = self._BASE_PATH + 'mimic.png'
 
         self.ICON_CLOSE = self._BASE_PATH + 'ic_close.png'

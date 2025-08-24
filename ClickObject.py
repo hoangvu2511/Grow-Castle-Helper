@@ -7,7 +7,6 @@ from utils.Utils import Utils
 
 
 class ClickObject:
-
     
     def __init__(self, path: str, **kwargs): 
         """init ClickObject
@@ -30,6 +29,9 @@ class ClickObject:
         self._path = path
         self._otherSettings = kwargs
         self._isClicked = False
+        self._count_miss_match = 0
+        self._enable_use_last = self._otherSettings.get('enable_use_last', False)
+        self._lastAction: (Box | None) = None
 
     def __str__(self):
         return self._otherSettings.get("icon_name", self._path).split('/')[-1]
@@ -44,10 +46,16 @@ class ClickObject:
     def isExist(self, logError=True) -> (Box | None):
         confidence = self._otherSettings.get('confidence', 0.8)
         try:
-            return pyautogui.locateOnScreen(self._path, confidence=confidence)
-        except:
+            return pyautogui.locateOnScreen(
+                image=self._path,
+                confidence=confidence,
+                grayscale=True,
+            )
+        except pyautogui.ImageNotFoundException:
             if logError:
-                Utils().log(f'Not found {self} with path {self._path}, confidence: {confidence}')
+                self._count_miss_match += 1
+                Utils().log(
+                    f'Not found {self} with path {self._path}, confidence: {confidence}, times: {self._count_miss_match}')
             return None
 
     def click(self):
@@ -55,7 +63,12 @@ class ClickObject:
         if self._isClicked and oneTimeClick:
             return True
         try:
-            action = self.isExist(self._otherSettings.get('logErrorOnClick', True))
+            if self._lastAction is not None and self._enable_use_last:
+                action = self._lastAction
+            else:
+                action = self.isExist(self._otherSettings.get('logErrorOnClick', True))
+                if not action: return False
+                self._lastAction = action
             if not action: return False
             if self._otherSettings.get('logOnFound'):
                 Utils().log(f'Found object at place {action}')
@@ -65,8 +78,9 @@ class ClickObject:
             if oneTimeClick:
                 self._isClicked = True
             return True
-        except:
-            Utils().log(f'Failed to click {self}')
+        except Exception as e:
+            self._lastAction = None
+            Utils().log(f'Failed to click {self}: {e}')
             pass
         return False
 

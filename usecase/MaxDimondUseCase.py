@@ -9,7 +9,7 @@ class MaxDimondUseCase(BaseUseCase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         imageConstant = ImageConstants()
-        self._maxDimond = ClickObject(imageConstant.MAX_DIMOND_CONDITION, confidence=0.3,
+        self._maxDimond = ClickObject(imageConstant.MAX_DIMOND_CONDITION, confidence=0.5,
                                       icon_name="'Max dimond condition'")
         self._maxDimondTarget = ClickObject(imageConstant.MAX_DIMOND_TARGET)
         self._maxDimondLevelUp = ClickObject(imageConstant.MAX_DIMOND_LEVEL_UP, numberOfClick=15,
@@ -17,6 +17,8 @@ class MaxDimondUseCase(BaseUseCase):
         self._tower = ClickObject(imageConstant.TOWER_CLICKABLE)
 
     def start_use_case(self, **kwargs) -> bool:
+        if not self._settings.get('enableMaxDimond', True):
+            return False
         Utils.wait(3)
         if not self._maxDimond.isExist():
             return False

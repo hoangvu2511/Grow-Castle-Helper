@@ -1,13 +1,14 @@
+from ClickObject import ClickObject
+from usecase.BaseUsecase import BaseUseCase
 from utils.ImageConstants import ImageConstants
 from utils.Utils import Utils
-from usecase.BaseUsecase import BaseUseCase
-from ClickObject import ClickObject
+
 
 class OpenAppUseCase(BaseUseCase):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         imageContants = ImageConstants()
-        defaultConfidence = 0.85
+        defaultConfidence = 0.6
         self._listBtn = [
             ClickObject(imageContants.ICON_APP, logOnFound = True, confidence = defaultConfidence, icon_name="app icon"),
             ClickObject(imageContants.ICON_APP_2, logOnFound = True, confidence = defaultConfidence, icon_name="alternative app icon"),

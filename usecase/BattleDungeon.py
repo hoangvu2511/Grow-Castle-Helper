@@ -19,10 +19,27 @@ class BattleDungeon(BaseUseCase):
         related = imageConstants.dungeonRelated()
         levelSelected = self._settings.get('levelSelected', self.defaultLevel)
         handleResult = self._settings.get('handleResult', self.defaultHandleResult)
-        self.openDungeon = ClickObject(imageConstants.DUNGEON_ENTRY, icon_name="icon dungeon")
-        self.levelSelected = ClickObject(related.get(levelSelected, self.defaultLevel), icon_name="icon dungeon")
-        self.startDungeon = ClickObject(related['battle_entry'], icon_name="icon battle")
-        self.resultBtn = ClickObject(related.get(handleResult, self.defaultHandleResult), icon_name="icon result")
+        self.openDungeon = ClickObject(
+            imageConstants.DUNGEON_ENTRY,
+            icon_name="icon dungeon",
+            enable_use_last=True,
+        )
+        self.levelSelected = ClickObject(
+            related.get(levelSelected, self.defaultLevel),
+            icon_name="icon level",
+            enable_use_last=True,
+        )
+        self.startDungeon = ClickObject(
+            related['battle_entry'],
+            icon_name="icon battle",
+            enable_use_last=True,
+        )
+        self.resultBtn = ClickObject(
+            related.get(handleResult, self.defaultHandleResult),
+            icon_name="icon result",
+            numberOfClick=handleResult == 'mat' and 2 or 1,
+            enable_use_last=True,
+        )
 
     def start_use_case(self, **kwargs) -> bool:
         if not self.openDungeon.click():

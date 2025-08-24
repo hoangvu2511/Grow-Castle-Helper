@@ -3,11 +3,11 @@ from abc import ABC, abstractmethod
 
 from ClickObject import ClickObject
 from utils.ImageConstants import ImageConstants
-from utils.SingleTonImplement import SingleTonImplement
+from utils.SingletonImplement import SingletonImplement
 from utils.Utils import Utils
 
 
-class BaseUseCase(SingleTonImplement, ABC):
+class BaseUseCase(SingletonImplement, ABC):
 
     def __init__(self, **kwargs):
         self._settings = kwargs
@@ -46,6 +46,9 @@ class BaseUseCase(SingleTonImplement, ABC):
 
     def reset(self):
         pass
+
+    def __str__(self):
+        return self.__class__.__name__
 
     def clearAllOpenedPopUp(self):
         icon_close = ClickObject(ImageConstants().ICON_CLOSE, confidence=0.7)
