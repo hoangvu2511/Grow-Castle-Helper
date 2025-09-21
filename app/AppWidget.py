@@ -61,8 +61,17 @@ class AppWidget(QMainWindow):
             ]
         )
         self.dropdown.setCurrentIndex(3)
+        self.handleResult = QComboBox()
+        self.handleResult.addItems(
+            [
+                'get',
+                'mat',
+            ]
+        )
+        self.handleResult.setCurrentIndex(0)
         layout.addWidget(self.radio_2)
         layout.addWidget(self.dropdown)
+        layout.addWidget(self.handleResult)
 
     def _startBtn(self, layout: QVBoxLayout):
         row = QHBoxLayout()
@@ -81,8 +90,8 @@ class AppWidget(QMainWindow):
         settings = {
             'enableClickTree': False,
             'enableMaxDimond': False,
-            'levelSelected': self.dropdown.currentText(),
-            'handleResult': 'mat',
+            'levelSelected': str(self.dropdown.currentText()),
+            'handleResult': str(self.handleResult.currentText()),
         }
         action = None
 
