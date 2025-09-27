@@ -7,18 +7,18 @@ from utils.SingletonImplement import SingletonImplement
 
 class Utils(SingletonImplement):
 
-    def __init__(self, tag=None):
-        self.tag = tag or 'Utils'
+    def __init__(self, tag: str | None=None):
+        self.tag: str = tag or 'Utils'
 
     @staticmethod
-    def wait(delay):
+    def wait(delay: float):
         time.sleep(delay)
 
     @staticmethod
     def getCurrentTime():
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    def log(self, message):
+    def log(self, message: str):
         print(self.getCurrentTime(), self.tag, message)
 
     @staticmethod
