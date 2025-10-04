@@ -8,11 +8,11 @@ class CheckBox:
             self,
             text: str,
             checked: bool = True,
-            useCase: BaseUseCase = None,
+            useCase: BaseUseCase | None = None,
     ):
-        self._view = QCheckBox(text)
+        self._view: QCheckBox = QCheckBox(text)
         self._view.setChecked(checked)
-        self.useCase = useCase
+        self.useCase: BaseUseCase | None = useCase
 
     def initView(self) -> QCheckBox:
         return self._view

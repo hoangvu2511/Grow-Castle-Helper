@@ -1,14 +1,15 @@
 import time
 from datetime import datetime
 from threading import Thread
+from typing import Callable
 
 from utils.SingletonImplement import SingletonImplement
+from utils.TypeAlias import Args, Kwargs
 
 
 class Utils(SingletonImplement):
-
-    def __init__(self, tag: str | None=None):
-        self.tag: str = tag or 'Utils'
+    def __init__(self, tag: str | None = None):
+        self.tag: str = tag or "Utils"
 
     @staticmethod
     def wait(delay: float):
@@ -22,7 +23,9 @@ class Utils(SingletonImplement):
         print(self.getCurrentTime(), self.tag, message)
 
     @staticmethod
-    def runOnAnotherThread(func, *args, **kwargs):
+    def runOnAnotherThread(
+        func: Callable[..., object] | None, *args: tuple[Args], **kwargs: Kwargs
+    ) -> Thread:
         thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread

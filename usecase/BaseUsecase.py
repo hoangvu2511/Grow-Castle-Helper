@@ -1,24 +1,24 @@
-import numbers
 from abc import ABC, abstractmethod
+from typing_extensions import override
 
 from ClickObject import ClickObject
 from utils.ImageConstants import ImageConstants
 from utils.SingletonImplement import SingletonImplement
+from utils.TypeAlias import Kwargs
 from utils.Utils import Utils
 
 
 class BaseUseCase(SingletonImplement, ABC):
+    def __init__(self, **kwargs: Kwargs):
+        self._settings: Kwargs = kwargs
 
-    def __init__(self, **kwargs):
-        self._settings = kwargs
+    def _usecaseLog(self, message: str):
+        Utils().log(f"{self.__class__.__name__}: {message}")
 
-    def _usecaseLog(self, message):
-        Utils().log(f'{self.__class__.__name__}: {message}')
-
-    def _wait(self, delay: numbers.Number):
+    def _wait(self, delay: float):
         Utils.wait(delay)
 
-    def startWithRetry(self, **kwargs) -> bool:
+    def startWithRetry(self, **kwargs: Kwargs) -> bool:
         """startWithRetry
         Args:
             **kwargs:
@@ -26,19 +26,20 @@ class BaseUseCase(SingletonImplement, ABC):
         Returns:
             bool: True if success, False if failed
         """
-        timeToRetry = kwargs.get('retry', -1)
+        timeToRetry: int = kwargs.get("retry", -1)  # pyright: ignore[reportAssignmentType]
         result = self.start_use_case(**kwargs)
         timeToRetry = timeToRetry - 1
         while not result and timeToRetry >= 0:
-            self._usecaseLog(f'Retry left: {timeToRetry}')
+            self._usecaseLog(f"Retry left: {timeToRetry}")
             result = self.start_use_case(**kwargs)
-            if result: break
+            if result:
+                break
             timeToRetry = timeToRetry - 1
 
         return result
 
     @abstractmethod
-    def start_use_case(self, **kwargs) -> bool:
+    def start_use_case(self, **kwargs: Kwargs) -> bool:
         return True
 
     def isExist(self) -> bool:
@@ -47,7 +48,8 @@ class BaseUseCase(SingletonImplement, ABC):
     def reset(self):
         pass
 
-    def __str__(self):
+    @override
+    def __str__(self) -> str:
         return self.__class__.__name__
 
     def clearAllOpenedPopUp(self):

@@ -1,5 +1,6 @@
 import sys
 import threading
+from typing import Callable
 
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QRadioButton,
@@ -36,16 +37,16 @@ class AppWidget(QMainWindow):
         self._dungeonUseCase(layout)
 
         self._startBtn(layout)
-        self._appState = None
+        self._appState: AppState | None = None
 
     def _battleUseCase(self, layout: QVBoxLayout):
-        self.radio_1 = QRadioButton("Endless Battle")
+        self.radio_1: QRadioButton = QRadioButton("Endless Battle")
         self.radio_1.setChecked(True)
         layout.addWidget(self.radio_1)
 
     def _dungeonUseCase(self, layout: QVBoxLayout):
-        self.radio_2 = QRadioButton("Endless Dungeon")
-        self.dropdown = QComboBox()
+        self.radio_2: QRadioButton = QRadioButton("Endless Dungeon")
+        self.dropdown: QComboBox = QComboBox()
         self.dropdown.addItems(
             [
                 'green_dragon',
@@ -61,7 +62,7 @@ class AppWidget(QMainWindow):
             ]
         )
         self.dropdown.setCurrentIndex(3)
-        self.handleResult = QComboBox()
+        self.handleResult: QComboBox = QComboBox()
         self.handleResult.addItems(
             [
                 'get',
@@ -77,11 +78,11 @@ class AppWidget(QMainWindow):
         row = QHBoxLayout()
 
         startBtn = QPushButton("Start")
-        startBtn.clicked.connect(self._onClickStart)
+        _ = startBtn.clicked.connect(self._onClickStart)
         row.addWidget(startBtn)
 
         stopBtn = QPushButton("Stop")
-        stopBtn.clicked.connect(self._onClickStop)
+        _ = stopBtn.clicked.connect(self._onClickStop)
         row.addWidget(stopBtn)
         self.currentThread = None
         layout.addLayout(row)
@@ -93,7 +94,7 @@ class AppWidget(QMainWindow):
             'levelSelected': str(self.dropdown.currentText()),
             'handleResult': str(self.handleResult.currentText()),
         }
-        action = None
+        action: Callable[..., object] | None = None
 
         if self._appState is None:
             self._appState = AppState(**settings)
@@ -104,8 +105,8 @@ class AppWidget(QMainWindow):
         elif self.radio_2.isChecked():
             action = self._appState.performDungeon
 
-        self.stop_event = threading.Event()
-        self.currentThread = Utils.runOnAnotherThread(action, stop_event=self.stop_event)
+        self.stop_event: threading.Event = threading.Event()
+        self.currentThread: threading.Thread | None = Utils.runOnAnotherThread(action, stop_event=self.stop_event)
 
     def _onClickStop(self):
         if not self.currentThread:

@@ -1,13 +1,16 @@
+from asyncio import SelectorEventLoop
+from typing_extensions import override
 from ClickObject import ClickObject
 from usecase.BaseUsecase import BaseUseCase
 from utils.ImageConstants import ImageConstants
+from utils.TypeAlias import Kwargs
 
 
 class BattleDungeon(BaseUseCase):
-    defaultLevel = 'green_dragon'
-    defaultHandleResult = 'get'
+    defaultLevel: str = "green_dragon"
+    defaultHandleResult: str = "get"
 
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Kwargs):
         """init BattleDungeon
         Args:
             kwargs: settings
@@ -16,32 +19,33 @@ class BattleDungeon(BaseUseCase):
         """
         super().__init__(**kwargs)
         imageConstants = ImageConstants()
-        related = imageConstants.dungeonRelated()
-        levelSelected = self._settings.get('levelSelected', self.defaultLevel)
-        handleResult = self._settings.get('handleResult', self.defaultHandleResult)
-        self.openDungeon = ClickObject(
+        related: dict[str, str] = imageConstants.dungeonRelated()
+        levelSelected: str = self._settings.get("levelSelected", self.defaultLevel)
+        handleResult: str = self._settings.get("handleResult", self.defaultHandleResult)
+        self.openDungeon: ClickObject = ClickObject(
             imageConstants.DUNGEON_ENTRY,
             icon_name="icon dungeon",
             enable_use_last=True,
         )
-        self.levelSelected = ClickObject(
+        self.levelSelected: ClickObject = ClickObject(
             related.get(levelSelected, self.defaultLevel),
             icon_name="icon level",
             enable_use_last=True,
         )
-        self.startDungeon = ClickObject(
-            related['battle_entry'],
+        self.startDungeon: ClickObject = ClickObject(
+            related["battle_entry"],
             icon_name="icon battle",
             enable_use_last=True,
         )
-        self.resultBtn = ClickObject(
+        self.resultBtn: ClickObject = ClickObject(
             related.get(handleResult, self.defaultHandleResult),
             icon_name="icon result",
-            numberOfClick=handleResult == 'mat' and 2 or 1,
+            numberOfClick=handleResult == "mat" and 2 or 1,
             enable_use_last=True,
         )
 
-    def start_use_case(self, **kwargs) -> bool:
+    @override
+    def start_use_case(self, **kwargs: Kwargs) -> bool:
         if not self.openDungeon.click():
             return False
         self._wait(2)
@@ -57,7 +61,7 @@ class BattleDungeon(BaseUseCase):
                 break
             boxHandleResult = self.resultBtn.isExist(logError=False)
             if boxHandleResult:
-                self.resultBtn.click()
+                _ = self.resultBtn.click()
                 break
             self._wait(2)
 
