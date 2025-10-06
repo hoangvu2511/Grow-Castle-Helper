@@ -62,6 +62,10 @@ class ClickObject:
                     f"Not found {self} with path {self._path}, confidence: {self._confidence}, times: {self._count_miss_match}"
                 )
             return None
+        except Exception as e:
+            self._count_miss_match += 1
+            Utils().log(f"Failed to locate {self}, path: {self._path}, times: ${self._count_miss_match}, error: {e}")
+            return None
 
     def click(self) -> bool:
         oneTimeClick = self._otherSettings.get("oneTimeClick", False)
