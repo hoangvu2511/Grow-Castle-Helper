@@ -33,8 +33,7 @@ class BattleUseCase(BaseUseCase):
         stop_event = kwargs.get("stop_event")
         if not self.btn.click():
             return False
-        Utils.wait(0.5)
-        self.close_btn.click()
+        Utils.wait(2)
         while not self.isExist() and (
             stop_event == None or (stop_event != None and stop_event.is_set() is False)
         ):
