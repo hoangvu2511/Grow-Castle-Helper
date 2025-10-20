@@ -1,6 +1,8 @@
 import sys
 import threading
+import os
 from typing import Callable
+from xmlrpc.client import Boolean
 
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QRadioButton,
@@ -18,7 +20,11 @@ class AppWidget(QMainWindow):
         app = QApplication(sys.argv)
         window = AppWidget()
         window.show()
-        sys.exit(app.exec())
+        code = app.exec()
+        if code == os.EX_OK:
+            window.printResultLog()
+            pass
+        sys.exit(code)
 
     def __init__(self):
         super().__init__()
@@ -38,6 +44,7 @@ class AppWidget(QMainWindow):
 
         self._startBtn(layout)
         self._appState: AppState | None = None
+        self._resultPrinted: Boolean = False
 
     def _battleUseCase(self, layout: QVBoxLayout):
         self.radio_1: QRadioButton = QRadioButton("Endless Battle")
@@ -93,6 +100,7 @@ class AppWidget(QMainWindow):
             'enableMaxDimond': False,
             'levelSelected': str(self.dropdown.currentText()),
             'handleResult': str(self.handleResult.currentText()),
+            'isBattle': self.radio_1.isChecked(),
         }
         action: Callable[..., object] | None = None
 
@@ -107,10 +115,17 @@ class AppWidget(QMainWindow):
 
         self.stop_event: threading.Event = threading.Event()
         self.currentThread: threading.Thread | None = Utils.runOnAnotherThread(action, stop_event=self.stop_event)
+        self._resultPrinted = False
 
     def _onClickStop(self):
         if not self.currentThread:
             return
         Utils().log('Stopping thread')
         self.stop_event.set()
-        pass
+        self.printResultLog()
+
+    def printResultLog(self):
+        if self._resultPrinted:
+            return
+        self._appState.printResultLog()
+        self._resultPrinted = True

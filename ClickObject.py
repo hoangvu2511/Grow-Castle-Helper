@@ -34,6 +34,7 @@ class ClickObject:
         self._enable_use_last: bool = self._otherSettings.get("enable_use_last", False)
         self._lastAction: Box | None = None
         self._confidence: float = self._otherSettings.get("confidence", 0.8)
+        self._successClickTimes: int = 0
         Utils().log(f"Created {path} {self._otherSettings}")
 
     @override
@@ -80,6 +81,7 @@ class ClickObject:
             numberOfClick = self._otherSettings.get("numberOfClick", 1)
             for _ in range(numberOfClick):
                 pyautogui.click(action)
+                self._successClickTimes += 1
             if oneTimeClick:
                 self._isClicked = True
             return True
@@ -108,3 +110,6 @@ class ClickObject:
 
     def reset(self):
         self._isClicked = False
+
+    def getSuccessClickTimes(self) -> int:
+        return self._successClickTimes

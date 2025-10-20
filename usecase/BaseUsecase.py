@@ -56,3 +56,7 @@ class BaseUseCase(SingletonImplement, ABC):
         icon_close = ClickObject(ImageConstants().ICON_CLOSE, confidence=0.7)
         while icon_close.click():
             Utils().wait(1)
+
+    @abstractmethod
+    def logFinalResult(self):
+        pass

@@ -29,3 +29,7 @@ class Utils(SingletonImplement):
         thread = Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread
+
+    @staticmethod
+    def log(message: str, tag: str | None = None):
+        Utils(tag=tag).log(message)

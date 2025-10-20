@@ -13,6 +13,7 @@ class AppState:
         self.maxDimondUseCase = MaxDimondUseCase(**kwargs)
         self.openAppUseCase = OpenAppUseCase()
         self.battleDungeon = BattleDungeon(**kwargs)
+        self._isBattleRunning = kwargs.get('isBattle', False)
 
     def performStart(self, stop_event=None):
         Utils.wait(2)
@@ -29,3 +30,9 @@ class AppState:
 
     def checkApp(self):
         return self.openAppUseCase.startWithRetry(retry=3)
+    
+    def printResultLog(self):
+        if not self._isBattleRunning:
+            Utils.log('Not support log dungeon result yet')
+            return
+        self.battleDungeon.logFinalResult()
