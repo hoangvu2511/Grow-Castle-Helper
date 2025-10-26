@@ -35,4 +35,4 @@ class AppState:
         if not self._isBattleRunning:
             Utils.log('Not support log dungeon result yet')
             return
-        self.battleDungeon.logFinalResult()
+        self.battleUseCase.logFinalResult()

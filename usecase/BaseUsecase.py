@@ -57,6 +57,5 @@ class BaseUseCase(SingletonImplement, ABC):
         while icon_close.click():
             Utils().wait(1)
 
-    @abstractmethod
     def logFinalResult(self):
         pass

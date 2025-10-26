@@ -20,11 +20,7 @@ class AppWidget(QMainWindow):
         app = QApplication(sys.argv)
         window = AppWidget()
         window.show()
-        code = app.exec()
-        if code == os.EX_OK:
-            window.printResultLog()
-            pass
-        sys.exit(code)
+        sys.exit(app.exec())
 
     def __init__(self):
         super().__init__()

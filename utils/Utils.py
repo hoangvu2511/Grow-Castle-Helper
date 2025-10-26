@@ -31,5 +31,9 @@ class Utils(SingletonImplement):
         return thread
 
     @staticmethod
-    def log(message: str, tag: str | None = None):
-        Utils(tag=tag).log(message)
+    def logMsg(message: str, tag: str | None = None):
+        if utilsInstance is None:
+            utilsInstance = Utils(tag=tag)
+        utilsInstance.log(message)
+
+utilsInstance: Utils | None = None
