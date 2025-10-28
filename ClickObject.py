@@ -77,7 +77,7 @@ class ClickObject:
             if not action:
                 return False
             if self._otherSettings.get("logOnFound"):
-                Utils().log(f"Found object at place {action}")
+                Utils().log(f"Found {self.__str__()} at place {action}")
             numberOfClick = self._otherSettings.get("numberOfClick", 1)
             for _ in range(numberOfClick):
                 pyautogui.click(action)
@@ -97,10 +97,9 @@ class ClickObject:
                 action = self._lastAction
             else:
                 action = self.isExist(self._otherSettings.get("logErrorOnClick", True))
-                if not action:
-                    return None
+                if not self._enable_use_last: 
+                    return action
                 self._lastAction = action
-                Utils().log(f"Found action for {self._path}: {action}")
             return action
         except Exception as e:
             self._lastAction = None

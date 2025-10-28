@@ -21,6 +21,7 @@ class BattleUseCase(BaseUseCase):
                 logErrorOnClick=False,
                 logOnFound=False,
                 enable_use_last=False,
+                confidence=0.75,
             ),
         ]
         if self._settings.get("enableClickTree", True):
@@ -56,6 +57,7 @@ class BattleUseCase(BaseUseCase):
     def logFinalResult(self):
         startBattleClickTimes = self.btn.getSuccessClickTimes()
         mimicClickTimes = self._buffAction[0].getSuccessClickTimes()
-        Utils.log("=========Battle result==========")
-        Utils.log(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes * 2} waves")
-        Utils.log(f"Mimic click times: {mimicClickTimes}")
+        _utils = Utils()
+        _utils.log("=========Battle result==========")
+        _utils.log(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes} waves")
+        _utils.log(f"Mimic click times: {mimicClickTimes}")
