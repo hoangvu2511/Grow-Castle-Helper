@@ -20,7 +20,7 @@ class Utils(SingletonImplement):
         return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     def log(self, message: str):
-        print(self.getCurrentTime(), self.tag, message)
+        print(self.getCurrentTime(), f"[{self.tag}]", message)
 
     @staticmethod
     def runOnAnotherThread(
@@ -35,5 +35,3 @@ class Utils(SingletonImplement):
         if utilsInstance is None:
             utilsInstance = Utils(tag=tag)
         utilsInstance.log(message)
-
-utilsInstance: Utils | None = None

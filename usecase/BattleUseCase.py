@@ -57,7 +57,7 @@ class BattleUseCase(BaseUseCase):
     def logFinalResult(self):
         startBattleClickTimes = self.btn.getSuccessClickTimes()
         mimicClickTimes = self._buffAction[0].getSuccessClickTimes()
-        _utils = Utils()
+        _utils = Utils(tag="Battle")
         _utils.log("=========Battle result==========")
         _utils.log(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes} waves")
         _utils.log(f"Mimic click times: {mimicClickTimes}")

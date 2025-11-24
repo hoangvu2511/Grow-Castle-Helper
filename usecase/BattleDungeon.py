@@ -2,6 +2,7 @@ from asyncio import SelectorEventLoop
 from typing_extensions import override
 from ClickObject import ClickObject
 from usecase.BaseUsecase import BaseUseCase
+from utils import Utils
 from utils.ImageConstants import ImageConstants
 from utils.TypeAlias import Kwargs
 
@@ -66,3 +67,12 @@ class BattleDungeon(BaseUseCase):
             self._wait(2)
 
         return True
+
+    @override
+    def printResultLog(self):
+        start_dungon_click_times = self.openDungeon.getSuccessClickTimes()
+        items_received = self.resultBtn.getSuccessClickTimes()
+        _utils = Utils(tag="Dungeon")
+        _utils.log("=========Dungeon result==========")
+        _utils.log(f"Start dungeon click times: {start_dungon_click_times} => {start_dungon_click_times} dungeons")
+        _utils.log(f"Items received: {items_received}")
