@@ -48,8 +48,16 @@ class ClickObject:
         assert path.strip() != "", "Path must not empty"
         assert os.path.exists(path), "Path not found"
 
-    def isExist(self, logError: bool = True) -> Box | None:
+    def isExist(self, logError: bool = True, haystackImage=None) -> Box | None:
         try:
+            if haystackImage is not None:
+                return pyautogui.locate(
+                    needleImage=self._path,
+                    haystackImage=haystackImage,
+                    confidence=self._confidence,
+                    grayscale=True,
+                    region=self._lastAction,
+                )
             return pyautogui.locateOnScreen(
                 image=self._path,
                 confidence=self._confidence,
@@ -68,12 +76,12 @@ class ClickObject:
             Utils().log(f"Failed to locate {self}, path: {self._path}, times: ${self._count_miss_match}, error: {e}")
             return None
 
-    def click(self) -> bool:
+    def click(self, haystackImage=None) -> bool:
         oneTimeClick = self._otherSettings.get("oneTimeClick", False)
         if self._isClicked and oneTimeClick:
             return True
         try:
-            action = self._retrieveAction()
+            action = self._retrieveAction(haystackImage)
             if not action:
                 return False
             if self._otherSettings.get("logOnFound"):
@@ -91,12 +99,12 @@ class ClickObject:
             pass
         return False
 
-    def _retrieveAction(self) -> Box | None:
+    def _retrieveAction(self, haystackImage=None) -> Box | None:
         try:
             if self._lastAction is not None and self._enable_use_last:
                 action = self._lastAction
             else:
-                action = self.isExist(self._otherSettings.get("logErrorOnClick", True))
+                action = self.isExist(self._otherSettings.get("logErrorOnClick", True), haystackImage)
                 if not self._enable_use_last: 
                     return action
                 self._lastAction = action

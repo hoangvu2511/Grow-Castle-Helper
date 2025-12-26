@@ -38,9 +38,10 @@ class BattleUseCase(BaseUseCase):
         while not self.isExist() and (
             stop_event == None or (stop_event != None and stop_event.is_set() is False)
         ):
+            screen = self.capture_screen()
             for action in self._buffAction:
-                Utils.wait(0.5)
-                action.click()
+                Utils.wait(0.1)
+                action.click(haystackImage=screen)
         self.reset()
         return True
 
@@ -57,7 +58,7 @@ class BattleUseCase(BaseUseCase):
     def logFinalResult(self):
         startBattleClickTimes = self.btn.getSuccessClickTimes()
         mimicClickTimes = self._buffAction[0].getSuccessClickTimes()
-        _utils = Utils(tag="Battle")
+        _utils = Utils(tag="Battle", console_log=True)
         _utils.log("=========Battle result==========")
         _utils.log(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes} waves")
         _utils.log(f"Mimic click times: {mimicClickTimes}")

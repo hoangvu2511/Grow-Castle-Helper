@@ -6,6 +6,8 @@ from utils.ImageConstants import ImageConstants
 from utils.SingletonImplement import SingletonImplement
 from utils.TypeAlias import Kwargs
 from utils.Utils import Utils
+import pyautogui
+from PIL import Image
 
 
 class BaseUseCase(SingletonImplement, ABC):
@@ -17,6 +19,9 @@ class BaseUseCase(SingletonImplement, ABC):
 
     def _wait(self, delay: float):
         Utils.wait(delay)
+
+    def capture_screen(self) -> Image.Image:
+        return pyautogui.screenshot()
 
     def startWithRetry(self, **kwargs: Kwargs) -> bool:
         """startWithRetry
