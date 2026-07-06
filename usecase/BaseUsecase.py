@@ -12,6 +12,9 @@ from PIL import Image
 
 class BaseUseCase(SingletonImplement, ABC):
     def __init__(self, **kwargs: Kwargs):
+        if getattr(self, '_initialized', False):
+            return
+        self._initialized = True
         self._settings: Kwargs = kwargs
 
     def _usecaseLog(self, message: str):

@@ -36,7 +36,7 @@ class BattleUseCase(BaseUseCase):
             return False
         Utils.wait(2)
         while not self.isExist() and (
-            stop_event == None or (stop_event != None and stop_event.is_set() is False)
+            stop_event is None or stop_event.is_set() is False
         ):
             screen = self.capture_screen()
             for action in self._buffAction:
@@ -47,7 +47,7 @@ class BattleUseCase(BaseUseCase):
 
     @override
     def isExist(self):
-        return self.btn.isExist(logError=False) != None
+        return self.btn.isExist(logError=False) is not None
 
     @override
     def reset(self):
@@ -58,7 +58,7 @@ class BattleUseCase(BaseUseCase):
     def logFinalResult(self):
         startBattleClickTimes = self.btn.getSuccessClickTimes()
         mimicClickTimes = self._buffAction[0].getSuccessClickTimes()
-        _utils = Utils(tag="Battle", console_log=True)
-        _utils.log("=========Battle result==========")
-        _utils.log(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes} waves")
-        _utils.log(f"Mimic click times: {mimicClickTimes}")
+        _utils = Utils()
+        _utils.log_result("=========Battle result==========", tag="Battle")
+        _utils.log_result(f"Start battle click times: {startBattleClickTimes} => {startBattleClickTimes} waves", tag="Battle")
+        _utils.log_result(f"Mimic click times: {mimicClickTimes}", tag="Battle")

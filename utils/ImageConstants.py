@@ -1,9 +1,16 @@
+import pathlib
+
 from utils.SingletonImplement import SingletonImplement
+
+_PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 
 
 class ImageConstants(SingletonImplement):
     def __init__(self):
-        self._BASE_PATH: str = "images/"
+        if getattr(self, '_initialized', False):
+            return
+        self._initialized = True
+        self._BASE_PATH: str = str(_PROJECT_ROOT / "images") + "/"
         self.START_IMAGE: str = self._BASE_PATH + "image.png"
         self.TREE_IMAGE: str = self._BASE_PATH + "tree.png"
         self.GOLD_IMAGE: str = self._BASE_PATH + "gold.png"

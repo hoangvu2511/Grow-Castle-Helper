@@ -2,8 +2,6 @@ import sys
 import threading
 import os
 from typing import Callable
-from xmlrpc.client import Boolean
-
 from PySide6.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout, QPushButton, QRadioButton,
     QComboBox, QHBoxLayout, QTextEdit
@@ -55,7 +53,7 @@ class AppWidget(QMainWindow):
         # Utils().setLogCallback(self._receive_log)
 
         self._appState: AppState | None = None
-        self._resultPrinted: Boolean = False
+        self._resultPrinted: bool = False
 
     def _receive_log(self, message: str):
         self._log_signal.emit(message)
@@ -145,6 +143,8 @@ class AppWidget(QMainWindow):
 
     def _printResultLog(self):
         if self._resultPrinted:
+            return
+        if self._appState is None:
             return
         self._appState.printResultLog()
         self._resultPrinted = True

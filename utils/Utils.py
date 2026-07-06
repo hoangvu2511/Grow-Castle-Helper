@@ -9,6 +9,9 @@ from utils.TypeAlias import Args, Kwargs
 
 class Utils(SingletonImplement):
     def __init__(self, tag: str | None = None, **kwargs: Kwargs):
+        if getattr(self, '_initialized', False):
+            return
+        self._initialized = True
         self.tag: str = tag or "Utils"
         self.log_callback: Callable[[str], None] | None = None
         self._print_console_log: bool = kwargs.get("console_log", False)
@@ -37,6 +40,14 @@ class Utils(SingletonImplement):
         if self.log_callback:
             self.log_callback(log_msg)
 
+    def log_result(self, message: str, tag: str | None = None) -> None:
+        """Log a result message, always printing to console regardless of _print_console_log."""
+        effective_tag = tag or self.tag
+        log_msg = f"{self.getCurrentTime()} [{effective_tag}] {message}"
+        print(log_msg)
+        if self.log_callback:
+            self.log_callback(log_msg)
+
     @staticmethod
     def runOnAnotherThread(
         func: Callable[..., object] | None, *args: tuple[Args], **kwargs: Kwargs
@@ -46,7 +57,5 @@ class Utils(SingletonImplement):
         return thread
 
     @staticmethod
-    def logMsg(message: str, tag: str | None = None):
-        if utilsInstance is None:
-            utilsInstance = Utils(tag=tag)
-        utilsInstance.log(message)
+    def logMsg(message: str, tag: str | None = None) -> None:
+        Utils().log_result(message, tag=tag)

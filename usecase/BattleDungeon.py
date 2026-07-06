@@ -1,8 +1,7 @@
-from asyncio import SelectorEventLoop
 from typing_extensions import override
 from ClickObject import ClickObject
 from usecase.BaseUsecase import BaseUseCase
-from utils import Utils
+from utils.Utils import Utils
 from utils.ImageConstants import ImageConstants
 from utils.TypeAlias import Kwargs
 
@@ -47,6 +46,7 @@ class BattleDungeon(BaseUseCase):
 
     @override
     def start_use_case(self, **kwargs: Kwargs) -> bool:
+        stop_event = kwargs.get("stop_event")
         if not self.openDungeon.click():
             return False
         self._wait(2)
@@ -58,6 +58,8 @@ class BattleDungeon(BaseUseCase):
             self.clearAllOpenedPopUp()
             return False
         while True:
+            if stop_event is not None and stop_event.is_set():
+                return False
             if self.startDungeon.isExist(logError=False):
                 break
             boxHandleResult = self.resultBtn.isExist(logError=False)
@@ -72,7 +74,7 @@ class BattleDungeon(BaseUseCase):
     def printResultLog(self):
         start_dungon_click_times = self.openDungeon.getSuccessClickTimes()
         items_received = self.resultBtn.getSuccessClickTimes()
-        _utils = Utils(tag="Dungeon", console_log=True)
-        _utils.log("=========Dungeon result==========")
-        _utils.log(f"Start dungeon click times: {start_dungon_click_times} => {start_dungon_click_times} dungeons")
-        _utils.log(f"Items received: {items_received}")
+        _utils = Utils()
+        _utils.log_result("=========Dungeon result==========", tag="Dungeon")
+        _utils.log_result(f"Start dungeon click times: {start_dungon_click_times} => {start_dungon_click_times} dungeons", tag="Dungeon")
+        _utils.log_result(f"Items received: {items_received}", tag="Dungeon")

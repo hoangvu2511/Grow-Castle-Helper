@@ -17,15 +17,15 @@ class AppState:
 
     def performStart(self, stop_event=None):
         Utils.wait(2)
-        while stop_event == None or (stop_event != None and stop_event.is_set() is False):
+        while stop_event is None or stop_event.is_set() is False:
             if not self.battleUseCase.start_use_case(stop_event=stop_event):
                 Utils.wait(0.5)
                 continue
             self.maxDimondUseCase.start_use_case()
 
     def performDungeon(self, stop_event=None):
-        while stop_event == None or (stop_event != None and stop_event.is_set() is False):
-            self.battleDungeon.start_use_case()
+        while stop_event is None or stop_event.is_set() is False:
+            self.battleDungeon.start_use_case(stop_event=stop_event)
             Utils.wait(2)
 
     def checkApp(self):

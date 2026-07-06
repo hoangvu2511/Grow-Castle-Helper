@@ -1,5 +1,4 @@
 import os
-from this import s
 from typing_extensions import override
 import pyautogui
 from typing import Any
@@ -43,10 +42,14 @@ class ClickObject:
 
     @staticmethod
     def _isValidatePath(path: str):
-        assert path is not None, "Path must not be None"
-        assert isinstance(path, str), "Path must be string"
-        assert path.strip() != "", "Path must not empty"
-        assert os.path.exists(path), "Path not found"
+        if path is None:
+            raise ValueError("Path must not be None")
+        if not isinstance(path, str):
+            raise ValueError("Path must be string")
+        if path.strip() == "":
+            raise ValueError("Path must not be empty")
+        if not os.path.exists(path):
+            raise ValueError(f"Path not found: {path}")
 
     def isExist(self, logError: bool = True, haystackImage=None) -> Box | None:
         try:
@@ -73,7 +76,7 @@ class ClickObject:
             return None
         except Exception as e:
             self._count_miss_match += 1
-            Utils().log(f"Failed to locate {self}, path: {self._path}, times: ${self._count_miss_match}, error: {e}")
+            Utils().log(f"Failed to locate {self}, path: {self._path}, times: {self._count_miss_match}, error: {e}")
             return None
 
     def click(self, haystackImage=None) -> bool:
@@ -96,7 +99,6 @@ class ClickObject:
         except Exception as e:
             self._lastAction = None
             Utils().log(f"Failed to click {self}: {e}")
-            pass
         return False
 
     def _retrieveAction(self, haystackImage=None) -> Box | None:
@@ -112,7 +114,6 @@ class ClickObject:
         except Exception as e:
             self._lastAction = None
             Utils().log(f"Failed to retrieve action for {self}: {e}")
-            pass
         return None
 
     def reset(self):
